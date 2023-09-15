@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <title>Licoreria P&P</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilo para la cuadrícula de productos */
+        #productList {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            grid-gap: 20px; /* Espacio entre las celdas de la cuadrícula */
+        }
+
+        /* Estilo para cada producto */
+        .product-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Estilo para las imágenes de producto */
+        .product-image {
+            max-width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Licorería P&P</h1>
+    <p id="storeInfo"></p>
+</header>
+
+<section id="productSection">
+    <h2>Productos</h2>
+    <ul id="productList"></ul>
+</section>
+
+<main>
+    <p><span class="contact">Dirección: </span>Cl. 31 #13a - 51 LC 06, Bogotá, Colombia</p>
+    <p><span class="contact">Teléfono: </span> +57 322 917 4767</p>
+    <p><span class="contact">Email: </span> <a href="mailto:licoreriapyp@gmail.com">licoreriapyp@gmail.com</a></p>
+    <figure>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7953.729134281759!2d-74.07831414541717!3d4.618239500000016!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9974f1758c13%3A0x794ac53b58185947!2sP%26P%20Liquors!5e0!3m2!1ses-419!2sco!4v1694472293768!5m2!1ses-419!2sco" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </figure>
+</main>
+
+<script>
+    async function populate() {
+        const requestURL = 'LicoresP&P.json';
+        const request = new Request(requestURL);
+
+        const response = await fetch(request);
+        const storeInfo = await response.json();
+        populateHeader(storeInfo);
+        populateProducts(storeInfo);
+    }
+
+    function populateHeader(storeInfo) {
+        const storeInfoPara = document.getElementById('storeInfo');
+        storeInfoPara.textContent = `Ubicación: ${storeInfo.location} // Teléfono: ${storeInfo.contact.phone} // Email: ${storeInfo.contact.email}`;
+    }
+
+    function populateProducts(storeInfo) {
+        const productList = document.getElementById('productList');
+        const products = storeInfo.products;
+
+        for (const product of products) {
+            const listItem = document.createElement('li');
+            listItem.classList.add('product-item'); // CLASS
+            const productImage = document.createElement('img');
+            productImage.classList.add('product-image'); // ESTILO
+            productImage.src = product.image; // URL IMAGEN
+            const productInfo = document.createElement('p');
+            productInfo.textContent = `${product.name} - ${product.brand} - ${product.price} - ${product.description}`;
+            
+            listItem.appendChild(productImage);
+            listItem.appendChild(productInfo);
+            productList.appendChild(listItem);
+        }
+    }
+
+    populate();
+</script>
+
+</body>
+
+</html>
